@@ -33,7 +33,7 @@ if (!defined('GLPI_ROOT')) {
 }
 
 
-class PluginDatainjectionDatabaseinstanceInjection extends DatabaseInstance
+class PluginDatainjectionDatabaseinstanceInjection extends CommonDBTM
                                          implements PluginDatainjectionInjectionInterface
 {
 

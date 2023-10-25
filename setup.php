@@ -30,16 +30,55 @@
 
 define ('PLUGIN_DATAINJECTION_VERSION', '2.13.3');
 
-// Minimal GLPI version, inclusive
-define("PLUGIN_DATAINJECTION_MIN_GLPI", "10.0.0");
-// Maximum GLPI version, exclusive
-define("PLUGIN_DATAINJECTION_MAX_GLPI", "10.0.99");
-
 if (!defined("PLUGIN_DATAINJECTION_UPLOAD_DIR")) {
     define("PLUGIN_DATAINJECTION_UPLOAD_DIR", GLPI_PLUGIN_DOC_DIR."/datainjection/");
 }
 
-function plugin_init_datainjection() {
+
+function plugin_version_datainjection() : array {
+
+   return [
+      'name'         => __('Data injection', 'datainjection'),
+      'author'       => 'Walid Nouh, Remi Collet, Nelly Mahu-Lasson, Xavier Caillaud, Minzord',
+      'homepage'     => 'https://github.com/pluginsGLPI/datainjection',
+      'license'      => 'GPLv2+',
+      'version'      => PLUGIN_DATAINJECTION_VERSION,
+      'requirements'   => [
+         'php'    => [
+             'min' => '8.0'
+         ]
+      ]
+   ];
+}
+
+function plugin_datainjection_check_prerequisites() : bool {
+   if (version_compare(ITSM_VERSION, '1.0', 'lt')) {
+       echo "This plugin requires ITSM >= 1.0";
+       return false;
+   }
+   return true;
+}
+
+/**
+ * Check if directories are writable
+ *
+ * @return boolean
+ */
+function plugin_datainjection_checkDirectories() : bool {
+
+   if (!file_exists(PLUGIN_DATAINJECTION_UPLOAD_DIR) || !is_writable(PLUGIN_DATAINJECTION_UPLOAD_DIR)) {
+      return false;
+   }
+   return true;
+}
+
+/**
+ * Function called at plugin activation
+ * This function is used to register class and define hooks
+ * used by the plugin
+ * @return void
+ */
+function plugin_init_datainjection() : void {
 
    global $PLUGIN_HOOKS, $CFG_GLPI, $INJECTABLE_TYPES;
 
@@ -88,30 +127,11 @@ function plugin_init_datainjection() {
 }
 
 
-function plugin_version_datainjection() {
-
-   return [
-      'name'         => __('Data injection', 'datainjection'),
-      'author'       => 'Walid Nouh, Remi Collet, Nelly Mahu-Lasson, Xavier Caillaud',
-      'homepage'     => 'https://github.com/pluginsGLPI/datainjection',
-      'license'      => 'GPLv2+',
-      'version'      => PLUGIN_DATAINJECTION_VERSION,
-      'requirements' => [
-         'glpi' => [
-            'min' => PLUGIN_DATAINJECTION_MIN_GLPI,
-            'max' => PLUGIN_DATAINJECTION_MAX_GLPI,
-         ]
-      ]
-   ];
-}
-
-
 /**
  * Return all types that can be injected using datainjection
  *
- * @return an array of injection class => plugin
  */
-function getTypesToInject() {
+function getTypesToInject() : void {
 
    global $INJECTABLE_TYPES,$PLUGIN_HOOKS;
 
@@ -188,7 +208,6 @@ function getTypesToInject() {
                         'PluginDatainjectionPrinterModelInjection'                => 'datainjection',
                         'PluginDatainjectionPeripheralModelInjection'             => 'datainjection',
                         'PluginDatainjectionNetworkEquipmentModelInjection'       => 'datainjection',
-                        //'PluginDatainjectionNetworkEquipmentFirmwareInjection'    => 'datainjection',
                         'PluginDatainjectionVirtualMachineTypeInjection'          => 'datainjection',
                         'PluginDatainjectionVirtualMachineSystemInjection'        => 'datainjection',
                         'PluginDatainjectionVirtualMachineStateInjection'         => 'datainjection',
@@ -221,18 +240,9 @@ function getTypesToInject() {
 }
 
 
-function plugin_datainjection_migratetypes_datainjection($types) {
+function plugin_datainjection_migratetypes_datainjection($types) : array {
 
    $types[996] = 'NetworkPort';
    $types[999] = 'NetworkPort';
    return $types;
-}
-
-
-function plugin_datainjection_checkDirectories() {
-
-   if (!file_exists(PLUGIN_DATAINJECTION_UPLOAD_DIR) || !is_writable(PLUGIN_DATAINJECTION_UPLOAD_DIR)) {
-      return false;
-   }
-   return true;
 }
