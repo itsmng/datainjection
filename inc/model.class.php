@@ -625,6 +625,11 @@ class PluginDatainjectionModel extends CommonDBTM
             self::getTypeName() . ' ' . PluginDatainjectionDropdown::getStatusLabel($this->fields['step']) => [
                 'visible' => true,
                 'inputs'  => [
+                    !$this->isNewID($ID) ? [
+                        'type'  => 'hidden',
+                        'name'  => 'id',
+                        'value' => $this->fields['id'],
+                    ] : [],
                     __('Name')       => [
                         'type'  => 'text',
                         'name'  => 'name',
@@ -730,7 +735,7 @@ class PluginDatainjectionModel extends CommonDBTM
       echo "<tr class='tab_bg_1'><th colspan='4'>".__('Validation')."</th></tr>";
       echo "<tr class='tab_bg_1'>";
       echo "<td class='center'>";
-      echo "<input type='submit' class='btn btn-secondary' name='validate' value='".
+      echo "<input type='submit' class='btn btn-secondary'submit name='validate' value='".
            _sx('button', 'Validate the model', 'datainjection')."'>";
       echo "<input type='hidden' name='id' value='".$this->fields['id']."'>";
       echo "</td>";
