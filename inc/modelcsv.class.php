@@ -153,21 +153,19 @@ class PluginDatainjectionModelcsv extends CommonDBChild
     * @param $options   array
    **/
    function showAdditionnalForm(PluginDatainjectionModel $model, $options = []) {
+      $this->getFromDBByModelID($model->fields['id']);
 
-      $id      = $this->getFromDBByModelID($model->fields['id']);
-      $canedit = $this->can($id, UPDATE);
+      echo "<h2>".__('Specific file format options', 'datainjection')."</h2>";
 
-      echo "<tr><th colspan='4'>".__('Specific file format options', 'datainjection')."</th></tr>";
+      echo "<div>";
+          echo "<label for='is_header_presend'>".__("Header's presence", 'datainjection')."</label>";
+          Dropdown::showYesNo('is_header_present', $this->isHeaderPresent());
+      echo "</div>";
 
-      echo "<tr class='tab_bg_1'>";
-      echo "<td>".__("Header's presence", 'datainjection')."</td>";
-      echo "<td>";
-      Dropdown::showYesNo('is_header_present', $this->isHeaderPresent());
-      echo "</td>";
-      echo "<td>".__('File delimitor', 'datainjection')."</td>";
-      echo "<td>";
-      echo "<input type='text' size='1' name='delimiter' value='".$this->getDelimiter()."'";
-      echo "</td></tr>";
+      echo "<div class='mb-2'>";
+          echo "<label for='delimiter'>".__('File delimitor', 'datainjection')."</label>";
+          echo "<input type='text' class='form-control' size='1' name='delimiter' value='".$this->getDelimiter()."'";
+      echo "</div>";
    }
 
 
