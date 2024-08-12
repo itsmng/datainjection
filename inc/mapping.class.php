@@ -145,7 +145,7 @@ class PluginDatainjectionMapping extends CommonDBTM
       if ($canedit) {
          echo "<tr> <td class='tab_bg_2 center' colspan='4'>";
          echo "<input type='hidden' name='models_id' value='".$model->fields['id']."'>";
-         echo "<input type='submit' name='update' value='"._sx('button', 'Save')."' class='submit'>";
+         echo "<input type='submit' name='update' value='"._sx('button', 'Save')."' class='btn btn-secondary my-2'>";
          echo "</td></tr>";
       }
       echo "</table>";

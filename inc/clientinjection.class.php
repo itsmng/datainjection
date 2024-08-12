@@ -154,7 +154,7 @@ class PluginDatainjectionClientInjection
 
       echo "<tr class='tab_bg_1'>";
       echo "<td>" . __('Choose a file', 'datainjection') . "</td>";
-      echo "<td><input type='file' name='filename'>";
+      echo "<td><input type='file' name='filename' class='form-control'>";
       echo "<input type='hidden' name='id' value='".$options['models_id']."'>";
       echo "</td></tr>";
 
@@ -179,9 +179,9 @@ class PluginDatainjectionClientInjection
       if (!isset($options['submit'])) {
          $options['submit'] = __('Launch the import', 'datainjection');
       }
-      echo "<input type='submit' class='submit' name='upload' value='".
+      echo "<input type='submit' class='btn btn-secondary' name='upload' value='".
            htmlentities($options['submit'], ENT_QUOTES, 'UTF-8'). "' $alert>";
-      echo "&nbsp;&nbsp;<input type='submit' class='submit' name='cancel' value=\""._sx('button', 'Cancel')."\">";
+      echo "&nbsp;&nbsp;<input type='submit' class='btn btn-secondary' name='cancel' value=\""._sx('button', 'Cancel')."\">";
       echo "</td></tr>\n";
       echo "</table><br>";
       if ($add_form) {

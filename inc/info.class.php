@@ -107,7 +107,7 @@ class PluginDatainjectionInfo extends CommonDBTM
          echo "<tr>";
          echo "<td class='tab_bg_2 center' colspan='4'>";
          echo "<input type='hidden' name='models_id' value='".$model->fields['id']."'>";
-         echo "<input type='submit' name='update' value='"._sx('button', 'Add')."' class='submit' >";
+         echo "<input type='submit' name='update' value='"._sx('button', 'Add')."' class='btn btn-secondary my-2' >";
          echo "</td></tr>";
 
          echo "</table>";
@@ -171,7 +171,7 @@ class PluginDatainjectionInfo extends CommonDBTM
             echo "<tr>";
             echo "<td class='tab_bg_2 center' colspan='4'>";
             echo "<input type='hidden' name='models_id' value='".$model->fields['id']."'>";
-            echo "<input type='submit' name='update' value='"._sx('button', 'Save')."' class='submit'>";
+            echo "<input type='submit' name='update' value='"._sx('button', 'Save')."' class='btn btn-secondary my-2'>";
             echo "</td></tr>";
 
             $formname = 'info_form' . $rand;
@@ -268,7 +268,7 @@ class PluginDatainjectionInfo extends CommonDBTM
           echo "<tr class='tab_bg_1'>";
           echo "<td colspan='2' class='center'>";
           echo "<a href='".$model->getFormURL()."?sample=";
-          echo $model->getField('id')."' class='vsubmit'>".__('Download file sample', 'datainjection');
+          echo $model->getField('id')."' class='btn btn-secondary'>".__('Download file sample', 'datainjection');
           echo "</a></td></tr>\n";
       }
       if ($model->fields['comment']) {
