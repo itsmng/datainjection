@@ -28,7 +28,7 @@
  * -------------------------------------------------------------------------
  */
 
-define ('PLUGIN_DATAINJECTION_VERSION', '2.13.3');
+define ('PLUGIN_DATAINJECTION_VERSION', '3.0.0');
 
 if (!defined("PLUGIN_DATAINJECTION_UPLOAD_DIR")) {
     define("PLUGIN_DATAINJECTION_UPLOAD_DIR", GLPI_PLUGIN_DOC_DIR."/datainjection/");
