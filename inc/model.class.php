@@ -100,10 +100,12 @@ class PluginDatainjectionModel extends CommonDBTM
 
    function canCreateItem() {
 
-      if ($this->isPrivate()
-          && ($this->fields['users_id'] != Session::getLoginUserID())
-      ) {
-         return false;
+      if ($this->isPrivate()) {
+         if (!$this->isNewID($this->fields['id'])
+             && ($this->fields['users_id'] != Session::getLoginUserID())
+         ) {
+            return false;
+         }
       }
 
       if (!$this->isPrivate()
@@ -897,6 +899,10 @@ class PluginDatainjectionModel extends CommonDBTM
       }
 
       $input['step'] = self::FILE_STEP;
+
+      if (isset($input['is_private']) && ($input['is_private'] == 1)) {
+         $input['users_id'] = Session::getLoginUserID();
+      }
 
       return $input;
    }
