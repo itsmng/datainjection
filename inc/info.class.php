@@ -357,15 +357,25 @@ class PluginDatainjectionInfo extends CommonDBTM
             echo ">";
             break;
 
-         case 'dropdown' :
-            if ($value == '') {
-                $value = 0;
-            }
-            Dropdown::show(
-                getItemTypeForTable($option['table']), ['name'  => $name,
-                                                                      'value' => $value]
-            );
-            break;
+       case 'dropdown' :
+          if ($value == '') {
+             $value = 0;
+          }
+          $itemtype = getItemTypeForTable($option['table']);
+          if ($itemtype) {
+             $selectOptions = [
+                'type' => 'select',
+                'name' => $name,
+                'value' => $value,
+                'itemtype' => $itemtype,
+                'values' => getOptionForItems($itemtype, $option['condition'] ?? []),
+                'condition' => $option['condition'] ?? [],
+             ];
+             renderTwigTemplate('macros/input.twig', expandSelect($selectOptions));
+          } else {
+             echo "<input type='text' name='$name' value='$value'>";
+          }
+          break;
 
          case 'bool' :
             if ($value == '') {
