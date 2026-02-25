@@ -37,7 +37,7 @@ class PluginDatainjectionApplianceInjection extends Appliance
 {
 
    static function getTable($classname = null) {
-      $parenttype = get_parent_class();
+      $parenttype = get_parent_class(static::class);
       return $parenttype::getTable();
    }
 

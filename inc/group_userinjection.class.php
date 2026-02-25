@@ -45,7 +45,7 @@ class PluginDatainjectionGroup_UserInjection extends Group_User
 
    static function getTable($classname = null) {
 
-      $parenttype = get_parent_class();
+      $parenttype = get_parent_class(static::class);
       return $parenttype::getTable();
 
    }

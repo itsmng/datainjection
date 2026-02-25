@@ -39,7 +39,7 @@ class PluginDatainjectionContract_SupplierInjection extends Contract_Supplier
 
    static function getTable($classname = null) {
 
-      $parenttype = get_parent_class();
+      $parenttype = get_parent_class(static::class);
       return $parenttype::getTable();
 
    }

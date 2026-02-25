@@ -35,7 +35,7 @@ class PluginDatainjectionContract_ItemInjection extends Contract_Item
 
    static function getTable($classname = null) {
 
-      $parenttype = get_parent_class();
+      $parenttype = get_parent_class(static::class);
       return $parenttype::getTable();
    }
 
