@@ -699,12 +699,13 @@ class PluginDatainjectionCommonInjectionLib
    static private function findUser($value, $entity) {
 
       global $DB;
+      $sql_value = $DB->escape(strtolower((string)$value));
 
       $sql = "SELECT `id`
               FROM `glpi_users`
-              WHERE LOWER(`name`) = '".strtolower($value)."'
-                 OR (CONCAT(LOWER(`realname`),' ',LOWER(`firstname`)) = '".strtolower($value)."'
-                    OR CONCAT(LOWER(`firstname`),' ',LOWER(`realname`)) = '".strtolower($value)."')";
+              WHERE LOWER(`name`) = '$sql_value'
+                 OR (CONCAT(LOWER(`realname`),' ',LOWER(`firstname`)) = '$sql_value'
+                    OR CONCAT(LOWER(`firstname`),' ',LOWER(`realname`)) = '$sql_value')";
       $result = $DB->query($sql);
       if ($DB->numrows($result)>0) {
          //check if user has right on the current entity
@@ -731,13 +732,14 @@ class PluginDatainjectionCommonInjectionLib
    static private function findContact($value, $entity) {
 
       global $DB;
+      $sql_value = $DB->escape(strtolower((string)$value));
 
       $sql = "SELECT `id`
               FROM `glpi_contacts`
-              WHERE `entities_id` = '".$entity."'
-                 AND (LOWER(`name`) = '".strtolower($value)."'
-                    OR (CONCAT(LOWER(`name`),' ',LOWER(`firstname`)) = '".strtolower($value)."'
-                       OR CONCAT(LOWER(`firstname`),' ',LOWER(`name`)) = '".strtolower($value)."'))";
+              WHERE `entities_id` = '".intval($entity)."'
+                 AND (LOWER(`name`) = '$sql_value'
+                    OR (CONCAT(LOWER(`name`),' ',LOWER(`firstname`)) = '$sql_value'
+                       OR CONCAT(LOWER(`firstname`),' ',LOWER(`name`)) = '$sql_value'))";
       $result = $DB->query($sql);
 
       if ($DB->numrows($result)>0) {
@@ -761,6 +763,7 @@ class PluginDatainjectionCommonInjectionLib
    static private function findSingle($item, $searchOption, $entity, $value) {
 
       global $DB;
+      $sql_value = $DB->escape((string)$value);
 
       $query = "SELECT `id`
                 FROM `".$item->getTable()."`
@@ -777,7 +780,7 @@ class PluginDatainjectionCommonInjectionLib
          );
       }
 
-      $query .= " AND `".$searchOption['field']."` = '$value'";
+      $query .= " AND `".$searchOption['field']."` = '$sql_value'";
       $result = $DB->query($query);
 
       if ($DB->numrows($result)>0) {
@@ -888,10 +891,11 @@ class PluginDatainjectionCommonInjectionLib
 
       global $DB;
       $item = new $itemtype();
+      $sql_name = $DB->escape((string)$name);
       $query = "SELECT `id`
                 FROM `".getTableForItemType($itemtype)."`
                 WHERE `is_template` = '1'
-                      AND `template_name` = '$name'";
+                      AND `template_name` = '$sql_name'";
       $result = $DB->query($query);
 
       if ($DB->numrows($result) > 0) {
@@ -1697,8 +1701,11 @@ class PluginDatainjectionCommonInjectionLib
             $item = new $itemtype();
             //If it's a computer device
             if ($item instanceof CommonDevice) {
+               $designation = $DB->escape(
+                   (string)$this->getValueByItemtypeAndName($itemtype, 'designation')
+               );
                $sql.= " WHERE `designation` = '" .
-                   $this->getValueByItemtypeAndName($itemtype, 'designation') . "'";
+                   $designation . "'";
 
             } else if ($item instanceof CommonDBRelation) {
                //Type is a relation : check it this relation still exists
@@ -1723,15 +1730,15 @@ class PluginDatainjectionCommonInjectionLib
                }
 
                $where .= " AND `$source_id`='".
-                 $this->getValueByItemtypeAndName($itemtype, $source_id)."'";
+                 $DB->escape((string)$this->getValueByItemtypeAndName($itemtype, $source_id))."'";
 
                if ($item->isField('itemtype')) {
                   $where .= " AND `$source_itemtype`='".
-                    $this->getValueByItemtypeAndName($itemtype, $source_itemtype)."'";
+                    $DB->escape((string)$this->getValueByItemtypeAndName($itemtype, $source_itemtype))."'";
                }
 
                $where .= " AND `".$destination_id."`='".
-                 $this->getValueByItemtypeAndName($itemtype, $destination_id)."'";
+                 $DB->escape((string)$this->getValueByItemtypeAndName($itemtype, $destination_id))."'";
                $sql   .= " WHERE 1 ".$where;
 
             } else {
@@ -1764,7 +1771,7 @@ class PluginDatainjectionCommonInjectionLib
                   } else {
                      //Type cannot be recursive
                      $where_entity = " AND `entities_id` = '".
-                       $this->getValueByItemtypeAndName($itemtype, 'entities_id')."'";
+                       $DB->escape((string)$this->getValueByItemtypeAndName($itemtype, 'entities_id'))."'";
                   }
 
                } else { //If no entity assignment for this itemtype
@@ -1779,8 +1786,11 @@ class PluginDatainjectionCommonInjectionLib
                            $email = $DB->escape($this->getValueByItemtypeAndName($itemtype, $field));
                            $where .= " AND `id` IN (SELECT `users_id` FROM glpi_useremails WHERE `email` = '$email') ";
                         } else {
+                           $field_value = $DB->escape(
+                               (string)$this->getValueByItemtypeAndName($itemtype, $field)
+                           );
                            $where .= " AND `" . $field . "`='".
-                              $this->getValueByItemtypeAndName($itemtype, $field) . "'";
+                              $field_value . "'";
                         }
 
                      }
@@ -1789,18 +1799,18 @@ class PluginDatainjectionCommonInjectionLib
                } else {
                   //Table contains an itemtype field
                   if ($injectionClass->isField('itemtype')) {
-                     $where .= " AND `itemtype` = '".$this->getValueByItemtypeAndName(
-                         $itemtype,
-                         'itemtype'
-                     )."'";
+                     $where .= " AND `itemtype` = '".
+                        $DB->escape(
+                            (string)$this->getValueByItemtypeAndName($itemtype, 'itemtype')
+                        )."'";
                   }
 
                   //Table contains an items_id field
                   if ($injectionClass->isField('items_id')) {
-                     $where .= " AND `items_id` = '".$this->getValueByItemtypeAndName(
-                         $itemtype,
-                         'items_id'
-                     )."'";
+                     $where .= " AND `items_id` = '".
+                        $DB->escape(
+                            (string)$this->getValueByItemtypeAndName($itemtype, 'items_id')
+                        )."'";
                   }
                }
 
