@@ -625,8 +625,9 @@ class PluginDatainjectionCommonInjectionLib
             break;
 
          case 'user' :
-            if ($value != Dropdown::EMPTY_VALUE) {
-                $id =  self::findUser($value, $this->entity);
+            $trimmed_value = trim((string)$value);
+            if ($trimmed_value !== '' && $trimmed_value != Dropdown::EMPTY_VALUE) {
+                $id =  self::findUser($trimmed_value, $this->entity);
             } else {
                $id =  Dropdown::EMPTY_VALUE;
             }
