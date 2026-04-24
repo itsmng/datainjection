@@ -403,18 +403,37 @@ class PluginDatainjectionInfo extends CommonDBTM
             break;
 
          case 'dropdown_integer' :
-            $minvalue = (isset($option['minvalue'])?$option['minvalue']:0);
-            $maxvalue = (isset($option['maxvalue'])?$option['maxvalue']:0);
+            $minvalue = (isset($option['minvalue'])?$option['minvalue']:($option['min'] ?? 0));
+            $maxvalue = (isset($option['maxvalue'])?$option['maxvalue']:($option['max'] ?? 0));
             $step     = (isset($option['step'])?$option['step']:1);
-            $default  = (isset($option['-1'])?[-1 => $option['-1']]:[]);
+            $toadd    = $option['toadd'] ?? [];
 
-            Dropdown::showNumber(
-                $name, ['value' => $value,
-                                            'min'   => $minvalue,
-                                            'max'   => $maxvalue,
-                                            'step'  => $step,
-                                            'toadd' => $default]
-            );
+            if (isset($option['-1']) && !isset($toadd[-1])) {
+                $toadd[-1] = $option['-1'];
+            }
+
+            $unit = $option['unit'] ?? '';
+            $values = $toadd;
+
+            if ($step <= 0) {
+                $step = 1;
+            }
+
+            for ($i = $minvalue; $i <= $maxvalue; $i += $step) {
+                if (!array_key_exists($i, $values)) {
+                    $values[$i] = Dropdown::getValueWithUnit($i, $unit);
+                }
+            }
+
+            if ($value === '') {
+                $value = array_key_exists(0, $values) ? 0 : $minvalue;
+            }
+
+            if ($value !== '' && !array_key_exists($value, $values)) {
+                $values[$value] = Dropdown::getValueWithUnit($value, $unit);
+            }
+
+            Dropdown::showFromArray($name, $values, ['value' => $value]);
             break;
 
          case 'template' :
