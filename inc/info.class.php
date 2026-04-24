@@ -412,28 +412,14 @@ class PluginDatainjectionInfo extends CommonDBTM
                 $toadd[-1] = $option['-1'];
             }
 
-            $unit = $option['unit'] ?? '';
-            $values = $toadd;
-
-            if ($step <= 0) {
-                $step = 1;
-            }
-
-            for ($i = $minvalue; $i <= $maxvalue; $i += $step) {
-                if (!array_key_exists($i, $values)) {
-                    $values[$i] = Dropdown::getValueWithUnit($i, $unit);
-                }
-            }
-
-            if ($value === '') {
-                $value = array_key_exists(0, $values) ? 0 : $minvalue;
-            }
-
-            if ($value !== '' && !array_key_exists($value, $values)) {
-                $values[$value] = Dropdown::getValueWithUnit($value, $unit);
-            }
-
-            Dropdown::showFromArray($name, $values, ['value' => $value]);
+            Dropdown::showNumber(
+                $name, ['value' => $value,
+                                            'min'   => $minvalue,
+                                            'max'   => $maxvalue,
+                                            'step'  => $step,
+                                            'unit'  => $option['unit'] ?? '',
+                                            'toadd' => $toadd]
+            );
             break;
 
          case 'template' :
