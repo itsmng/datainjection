@@ -370,8 +370,15 @@ class PluginDatainjectionInfo extends CommonDBTM
                 'itemtype' => $itemtype,
                 'values' => getOptionForItems($itemtype, $option['condition'] ?? []),
                 'condition' => $option['condition'] ?? [],
+                'actions' => getItemActionButtons(['info', 'add'], $itemtype),
+                'col_md' => 12,
+                'col_lg' => 12,
              ];
-             renderTwigTemplate('macros/input.twig', expandSelect($selectOptions));
+             expandSelect($selectOptions);
+             renderTwigTemplate('macros/wrappedInput.twig', [
+                'title' => '',
+                'input' => $selectOptions,
+             ]);
           } else {
              echo "<input type='text' name='$name' value='$value'>";
           }
