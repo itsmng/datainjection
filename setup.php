@@ -40,7 +40,7 @@ function plugin_version_datainjection() : array {
    return [
       'name'         => __('Data injection', 'datainjection'),
       'author'       => 'Walid Nouh, Remi Collet, Nelly Mahu-Lasson, Xavier Caillaud, Minzord',
-      'homepage'     => 'https://github.com/pluginsGLPI/datainjection',
+      'homepage'     => 'https://github.com/itsmng/datainjection',
       'license'      => 'GPLv2+',
       'version'      => PLUGIN_DATAINJECTION_VERSION,
       'requirements'   => [
