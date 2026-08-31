@@ -1,0 +1,12 @@
+Source: datainjection
+Section: web
+Priority: standard
+Maintainer: ITSMng SysAdmin <sysadmin@itsm-ng.com>
+Build-Depends:	debhelper (>= 9)
+Rules-Requires-Root: no
+Homepage: https://github.com/itsmng/datainjection
+
+Package: itsm-ng-plugin-datainjection
+Architecture: all
+Depends: itsm-ng (>= 1:2.0),
+Description: This plugin allows data import into ITSM-ng using CSV files.
